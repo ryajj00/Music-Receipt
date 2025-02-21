@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Receipt - Home</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <style>
+        .receipt-section img {
+            width: 100%;
+            height: auto;
+            max-width: 300px;
+        }
+
+        spline-viewer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* Add transition for smooth background color change */
+        #type-select-dropdown {
+            transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Added box-shadow transition */
+            appearance: none;
+            -webkit-appearance: none; /* Safari and Chrome */
+            -moz-appearance: none; /* Firefox */
+            padding: 10px; /* Add some padding for better appearance */
+            border: 1px solid #ccc; /* Add a border */
+            border-radius: 5px; /* Add some rounded corners */
+            background-color: #fff; /* Set a default background color */
+        }
+
+        /* Change background color on hover */
+        #type-select-dropdown:hover {
+            background-color: #f0f0f0; /* Light grey */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Added shadow */
+        }
+
+        /* Change background color on focus (when the dropdown is open) */
+        #type-select-dropdown:focus {
+            background-color: #e0e0e0; /* Slightly darker grey */
+            outline: none; /* Remove the default focus outline */
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3); /* Added a more prominent shadow */
+        }
+
+        /* Fade-in animation */
+        .receiptContainer {
+            opacity: 0;
+            animation: fadeIn 1.5s forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Slide-in animation for receipt items */
+        .item-list li {
+            transform: translateX(-20px);
+            opacity: 0;
+            animation: slideIn 0.3s forwards;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Scale-up animation for receipt header */
+        .receipt-header {
+            transform: scale(0.9);
+            opacity: 0;
+            animation: scaleUp 0.3s forwards;
+        }
+
+        @keyframes scaleUp {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        body {
+            background: #368dda;
+        }
+
+        .bubble {
+            position: relative;
+            font-family: sans-serif;
+            font-size: 18px;
+            line-height: 24px;
+            width: 300px;
+            background: #fff;
+            border-radius: 40px;
+            padding: 24px;
+            text-align: center;
+            color: #000;
+        }
+
+        .bubble-bottom-left:before {
+            content: "";
+            width: 0px;
+            height: 0px;
+            position: absolute;
+            border-left: 24px solid #fff;
+            border-right: 12px solid transparent;
+            border-top: 12px solid #fff;
+            border-bottom: 20px solid transparent;
+            left: 32px;
+            bottom: -24px;
+        }
+    </style>
+    <script src="src/dom-to-image.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
+</head>
+<body>
+
+    <nav>
+        <button onclick="logout()" class="logout-button">Log Out</button>
+    </nav>
+    <div class="container">
+        <!--Change Section here-->
+        <div class = "receiptSection">
+            <div class = "receiptContainer" id="receipt">
+                <div class="tab"></div> <!-- Added tab here -->
+                <!-- New Receipt Content -->
+                <div class="receipt-header">
+                    <h2>Music Receipt</h2>
+                    <p id="time-period-display"></p>
+                </div>
+                <div class="receipt-details">
+                    <p id="order-details">ORDER #0000</p>
+                    <p id="receipt-date"></p>
+                </div>
+                <div class="receipt-items">
+                            <div class="header-separator"></div>
+                            <!--New: Added header line-->
+                            <div class="item-header">
+                                <span class="qty">QTY</span>
+                                <span class="item">ITEM</span>
+                                <span class="amt">AMT</span>
+                        </div>
+                            <div class="header-separator"></div>
+                        <div class="item-list">
+                            <ul id="track-list"></ul>
+                        </div>
+                        <div class="header-separator"></div>
+                        <div class = "totalAmount">
+                            <span>Item Count:</span>
+                            <span id="item-count"></span>
+                        </div>
+                        <div class = "totalAmount">
+                            <span class = "total">TOTAL:</span>
+                            <span id="total-amount"></span>
+                        </div>
+                    
+                </div>
+                <p class="thanks" style="text-align: center;">THANK YOU FOR VISITING!</p>
+                <div class="barcode-container">
+                    <img src="src/ICCT.png" alt="Barcode">
+                </div>
+                
+            </div>
+            <div class="download-buttons">
+                <button id="downloadButton" onclick="downloadImage()" class="logout-button">Download Receipt</button>
+                <button onclick = "showReceiptNewTab()" class="logout-button">View in New Tab</button>
+            </div>
+        </div>
+        <section class="customize-section">
+            <h2 style="color: black;">Customize Receipt</h2>
+
+            <div class="form-group">
+                <label for="metric" style="color: black;">Metric</label>
+                <select id="type-select-dropdown" onchange = "updateReceipt()">
+                    <option value="tracks">Top Tracks</option>
+                    <option value="artists">Top Artists</option>
+                    <option value="genres">Top Genres</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label style="color: black;">Time Period</label>
+                <!-- The most important fix is here-->
+                <div class="button-group" id="time-period">
+                    <button class="delete-button" data-time-range="short_term" onclick="updateActiveButton(this); updateReceipt()">This Month</button>
+                    <button class="delete-button" data-time-range="medium_term" onclick="updateActiveButton(this); updateReceipt()">Last 6 Months</button>
+                    <button class="delete-button" data-time-range="long_term" onclick="updateActiveButton(this); updateReceipt()">Last Year</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label style="color: black;">Mode</label>
+                <div class="button-group" id="mode">
+                    <button class="delete-button" data-mode="normal" onclick="updateActiveButton(this); updateReceipt()">Normal</button>
+                    <button class="delete-button" data-mode="brat" onclick="updateActiveButton(this); updateReceipt()">Brat Edition</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label style="color: black;">Length</label>
+                <div class="button-group" id="length">
+                    <button class="delete-button" data-length="10" onclick="updateActiveButton(this); updateReceipt()">Top 10</button>
+                    <button class="delete-button" data-length="50" onclick="updateActiveButton(this); updateReceipt()">Top 50</button>
+                </div>
+            </div>
+            <div id="genre-chart" style="width: 100%; height: 400px;"></div>
+        </section>
+        <div id="personality-analysis" style="color: black; margin-top: 20px;"></div>
+    </div>
+    <script id="user-profile-template" type="text/x-handlebars-template">
+        <!-- Handlebars template for the receipt -->
+        <h1>{}</h1>
+        <ul>
+            {{#each tracks}}
+            <li>{} - {} - {} - {}</li>
+        {{/each}}
+        </ul>
+        <p>Total: {}</p>
+    </script>
+    <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.63/build/spline-viewer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dom-to-image@2.6.0/src/dom-to-image.min.js"></script>
+    <script>
+    // 1. Declarations and Access
+    const clientId = 'fc0b6630837144ecae9a0bf845ed2c0d';
+    const redirectUri = 'http://localhost:3000/index.html'; // Corrected: No 'public'
+
+    const scopes = [
+        'user-read-email',
+        'user-top-read'
+    ];
+
+    let accessToken = null
+
+    const loadAccessTokenFromUrl = () => {
+        return new URLSearchParams(window.location.hash.substring(1)).get('access_token');
+    }
+
+    const setToken = () => {
+        accessToken = loadAccessTokenFromUrl();
+        localStorage.setItem('spotify_access_token', accessToken);
+    }
+
+    setToken()
+
+    // 2. Helper Functions: Authentication
+    const requestAuthorization = () => {
+        window.location.href = getLoginURL(scopes);
+    };
+
+    // function to help generate log-in url for the website for spotify
+    function getLoginURL(scopes) {
+        const clientId = 'fc0b6630837144ecae9a0bf845ed2c0d';
+        const redirectUri = 'http://localhost:3000/index.html';
+        const state = generateRandomString(16);
+
+        let url = 'https://accounts.spotify.com/authorize';
+        url += '?response_type=token';
+        url += '&client_id=' + encodeURIComponent(clientId);
+        url += '&scope=' + encodeURIComponent(scopes.join(' '));
+        url += '&redirect_uri=' + encodeURIComponent(redirectUri);
+        url += '&state=' + encodeURIComponent(state);
+        return url;
+    }
+
+    // function to help generate random strings
+    function generateRandomString(length) {
+        let text = '';
+        const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        for (let i = 0; i < length; i++) {
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+        }
+        return text;
+    }
+    // 3. Helper Functions: API Calls
+    async function fetchSpotifyData(endpoint, params = {}) {
+        const accessToken = localStorage.getItem('spotify_access_token');
+
+        if (!accessToken) {
+            console.warn("Access token not found. Please log in.");
+            window.location.href = 'login.html';
+            return null; // Return null to indicate an error
+        }
+
+        const url = `https://api.spotify.com/v1/${endpoint}?${new URLSearchParams(params)}`;
+
+        try {
+            const response = await fetch(url, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            });
+
+            if (!response.ok) {
+                let errorMessage = `HTTP error! Status: ${response.status}`;
+                if (response.status === 401) {
+                    errorMessage += " - Invalid or expired access token. Please log in again.";
+                } else if (response.status === 403) {
+                    errorMessage += " - Insufficient permissions. Make sure you granted all necessary scopes.";
+                } else if (response.status === 429) {
+                    errorMessage += " - Too many requests. Please wait a few minutes and try again.";
+                } else {
+                    errorMessage += " - An unexpected error occurred.";
+                }
+                console.error(errorMessage, response.url);
+                return null; // Return null to indicate an error
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error("Error during fetch:", error);
+            return null; // Return null to indicate an error
+        }
+    }
+
+    async function fetchTopTracks(time_range = "short_term", limit = 10) {
+        try {
+            const data = await fetchSpotifyData("me/top/tracks", {time_range, limit});
+            return data;
+        } catch (error) {
+            console.error("Error fetching top tracks:", error);
+            throw error;
+        }
+    }
+
+    async function fetchTopArtists(time_range = "short_term", limit = 10) {
+        try {
+            const data = await fetchSpotifyData("me/top/artists", { time_range, limit });
+            return data;
+        } catch (error) {
+            console.error("Error fetching top artists:", error);
+            throw error;
+        }
+    }
+
+    async function fetchTopGenres(time_range = "short_term", limit = 10) {
+        try {
+            const data = await fetchSpotifyData("me/top/artists", { time_range, limit });
+            return data;
+        } catch (error) {
+            console.error("Error fetching top artists:", error);
+            throw error;
+        }
+    }
+
+    
+
+    // 2. New Display Functions:
+
+    const displayArtistsReceipt = (response) => {
+        if (!response || !response.items) {
+            console.error("No artist data received to display.");
+            document.getElementById('track-list').innerHTML = "<p>No artist data available.</p>";
+            document.getElementById('item-count').innerHTML = "";
+            document.getElementById('total-amount').innerHTML = "";
+            return;
+        }
+
+        const artists = response.items;
+        const trackList = document.getElementById('track-list');
+        trackList.innerHTML = '';
+
+        let totalPopularity = 0; // Initialize total popularity
+
+        artists.forEach(function (artist, i) {
+            const qty = String(i + 1).padStart(2, '0');
+            const listItem = document.createElement('li');
+            listItem.innerHTML = `<span class="qty">${qty}</span><span class="item"><a href="${artist.external_urls.spotify}" target="_blank" style="color: inherit; text-decoration: none;"></a></span><span class="amt"></span>`;
+            trackList.appendChild(listItem);
+
+            const itemSpan = listItem.querySelector('.item a');
+            const amtSpan = listItem.querySelector('.amt');
+            const itemText = artist.name.toUpperCase(); // Uppercase artist name
+            const amtValue = artist.popularity; // Get popularity value
+            const amtText = amtValue.toFixed(2); // Convert to string for display
+
+            totalPopularity += amtValue; // Add to total popularity
+
+            let charIndex = 0;
+
+            function typeCharacter() {
+                if (charIndex < itemText.length) {
+                    itemSpan.textContent += itemText.charAt(charIndex);
+                    charIndex++;
+                    setTimeout(typeCharacter, 20);
+                } else {
+                    amtSpan.textContent = amtText;
+                }
+            }
+
+            setTimeout(typeCharacter, i * 150);
+        });
+
+        document.getElementById('item-count').innerHTML = artists.length > 0 ? artists.length : "";
+        document.getElementById('total-amount').innerHTML = totalPopularity.toFixed(2); // Display total popularity
+    };
+
+    const displayGenresReceipt = (response) => {
+        if (!response || !response.items) {
+            console.error("No genre data received to display.");
+            document.getElementById('track-list').innerHTML = "<p>No genre data available.</p>";
+            document.getElementById('item-count').innerHTML = "";
+            document.getElementById('total-amount').innerHTML = "";
+            return;
+        }
+
+        // Aggregate genres from artists
+        const genreCounts = {};
+        response.items.forEach(artist => {
+            if (artist.genres && Array.isArray(artist.genres)) {
+                artist.genres.forEach(genre => {
+                    genreCounts[genre] = (genreCounts[genre] || 0) + 1;
+                });
+            }
+        });
+
+        // Sort genres by count
+        const sortedGenres = Object.entries(genreCounts).sort(([, countA], [, countB]) => countB - countA);
+
+        const trackList = document.getElementById('track-list');
+        trackList.innerHTML = '';
+
+        for (let i = 0; i < sortedGenres.length; i++) {
+            const [genre, count] = sortedGenres[i];
+            const qty = String(i + 1).padStart(2, '0');
+
+            const listItem = document.createElement('li');
+            listItem.innerHTML = `<span class="qty">${qty}</span><span class="item"></span><span class="amt">${count}</span>`;
+            trackList.appendChild(listItem);
+
+            const itemSpan = listItem.querySelector('.item');
+            const itemText = genre.toUpperCase(); // Uppercase genre
+
+            let charIndex = 0;
+
+            function typeCharacter() {
+                if (charIndex < itemText.length) {
+                    itemSpan.textContent += itemText.charAt(charIndex);
+                    charIndex++;
+                    setTimeout(typeCharacter, 20);
+                }
+            }
+
+            setTimeout(typeCharacter, i * 150);
+        }
+
+        document.getElementById('item-count').innerHTML = sortedGenres.length > 0 ? sortedGenres.length : "";
+        document.getElementById('total-amount').innerHTML = ""; // Clear total time
+
+        // Draw the pie chart
+        drawGenreChart(sortedGenres);
+
+        // Analyze genres using Groq API
+        analyzeGenres(sortedGenres.map(([genre, count]) => genre));
+    };
+
+    function drawGenreChart(genres) {
+    google.charts.load('current', { packages: ['corechart'] });
+    google.charts.setOnLoadCallback(() => {
+        const data = new google.visualization.DataTable();
+        data.addColumn('string', 'Genre');
+        data.addColumn('number', 'Count');
+
+        genres.forEach(([genre, count]) => {
+            data.addRow([genre, count]);
+        });
+
+        const options = {
+            title: 'Top Genres',
+            pieHole: 0.4, // Creates a donut-style chart
+            backgroundColor: 'transparent', // Makes background transparent
+            colors: ['#ff6b6b', '#ffcc5c', '#88d8b0', '#6a89cc', '#f78fb3', '#e15f41'], // Custom colors
+            fontName: 'Arial',
+            titleTextStyle: {
+                fontSize: 25,
+                bold: true,
+                color: 'black',
+            },
+            legend: {
+                position: 'bottom',
+                textStyle: {
+                    fontSize: 14,
+                    color: '#444',
+                },
+            },
+            pieSliceTextStyle: {
+                color: 'white',
+                fontSize: 14,
+            },
+            chartArea: {
+                width: '90%',
+                height: '80%',
+            },
+            animation: {
+                startup: true,
+                duration: 1000,
+                easing: 'out',
+            },
+        };
+
+        const chart = new google.visualization.PieChart(document.getElementById('genre-chart'));
+        chart.draw(data, options);
+    });
+}
+
+async function analyzeGenres(genres) {
+    const analysisDiv = document.getElementById('personality-analysis');
+    analysisDiv.textContent = "Analyzing personality...";
+
+    try {
+        const response = await fetch('http://localhost:3002/analyze-genres', { // Use the correct port for your Groq server
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ genres: genres })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        // Create chat bubble
+        const chatBubble = document.createElement('div');
+        chatBubble.classList.add('bubble', 'bubble-bottom-left');
+        
+        // Format analysis as a single paragraph
+        const analysisText = `<p style="font-size: 20px">${data.analysis.replace(/\n/g, ' ')}</p>`;
+        chatBubble.innerHTML = analysisText;
+
+        analysisDiv.innerHTML = ""; // Clear previous content
+        analysisDiv.appendChild(chatBubble);
+
+    } catch (error) {
+        console.error('Error analyzing genres:', error);
+        analysisDiv.textContent = "Error analyzing personality.";
+    }
+}
+
+    function downloadImage() {
+        window.scrollTo(0, 0);
+        const element = document.querySelector('.receiptContainer');
+
+        domtoimage.toPng(element)
+            .then(function (dataUrl) {
+                var link = document.createElement('a');
+                link.href = dataUrl;
+                link.download = 'receipt.png';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            })
+            .catch(function (error) {
+                console.error('oops, something went wrong!', error);
+            });
+    }
+
+    function showReceiptNewTab() {
+        window.scrollTo(0, 0);
+        const element = document.querySelector('.receiptContainer');
+
+        domtoimage.toPng(element)
+            .then(function (dataUrl) {
+                const newWindow = window.open('about:blank', '_blank');
+                let img = newNewWindow.document.createElement('img');
+                img.src = dataUrl;
+                newWindow.document.body.appendChild(img);
+            })
+            .catch(function (error) {
+                console.error('oops, something went wrong!', error);
+            });
+    }
+
+    async function logout() {
+        localStorage.removeItem('spotify_access_token');
+        window.location.href = 'login.html';
+    }
+    
+   function updateActiveButton(clickedButton) {
+        const buttonGroup = clickedButton.parentNode;
+        //Remove from the parent (div) all tags that contains attribute active to it
+        Array.from(buttonGroup.children).forEach(btn => {
+            btn.classList.remove('active');
+        });
+        clickedButton.classList.add('active');
+    }
+
+    function updateModeButton(clickedButton) {
+        const buttonGroup = clickedButton.parentNode;
+        //Remove from the parent (div) all tags that contains attribute active to it
+        Array.from(buttonGroup.children).forEach(btn => {
+            btn.classList.remove('active');
+        });
+        clickedButton.classList.add('active');
+        if(clickedButton.innerHTML === "Normal"){
+           
+        }
+        else if (clickedButton.innerHTML === "Brat Edition"){
+            
+        }
+    }
+        function updateLengthButton(clickedButton) {
+        const buttonGroup = clickedButton.parentNode;
+        //Remove from the parent (div) all tags that contains attribute active to it
+        Array.from(buttonGroup.children).forEach(btn => {
+            btn.classList.remove('active');
+        });
+        clickedButton.classList.add('active');
+    }
+
+    function msToMinutesAndSeconds(ms) {
+        const minutes = Math.floor(ms / (1000 * 60));
+        const seconds = Math.floor((ms % (1000 * 60)) / 1000);
+        return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    }
+
+    const updateTimePeriodDisplay = (timePeriod) => {
+        let display;
+        switch (timePeriod) {
+            case 'short_term':
+                display = "THIS MONTH";
+                break;
+            case 'medium_term':
+                display = "LAST 6 MONTHS";
+                break;
+            case 'long_term':
+                display = "LAST YEAR";
+                break;
+            default:
+                display = "ALL TIME";
+                break;
+        }
+        document.getElementById('time-period-display').innerHTML = display;
+    }
+
+    function getHashParams() {
+        var hashParams = {};
+        var e, r = /([^&;=]+)=?([^&]*)/g,
+            q = window.location.hash.substring(1);
+        while ( e = r.exec(q)) {
+           hashParams[e[1]] = decodeURIComponent(e[2]);
+        }
+        return hashParams;
+       }
+       
+
+    // 4. Function: Display Receipt
+    const displayReceipt = (response, stats) => {
+        if (!response || !response.items) {
+            console.error("No data received to display.");
+            document.getElementById('track-list').innerHTML = "<p>No data available.</p>";
+            document.getElementById('item-count').innerHTML = "";
+            document.getElementById('total-amount').innerHTML = "";
+            return;
+        }
+        const track = response.items;
+        let receiptHTML = ''; //Remove h2 tag
+        let totalTime = 0; //New: Reset the time in 0
+        const trackList = document.getElementById('track-list');
+        trackList.innerHTML = ''; // Clear existing list
+
+        //Animate listing
+        track.forEach(function (song, i) {
+            const qty = String(i + 1).padStart(2, '0');
+            const listItem = document.createElement('li');
+            listItem.innerHTML = `<span class="qty">${qty}</span><span class="item"><a href="${song.external_urls.spotify}" target="_blank" style="color: inherit; text-decoration: none;"></a></span><span class="amt"></span>`;
+            trackList.appendChild(listItem);
+
+            const itemSpan = listItem.querySelector('.item a');
+            const amtSpan = listItem.querySelector('.amt'); // Get the amt span
+            const itemText = `${song.name} - ${song.artists[0].name}`.toUpperCase(); // Extract text content and uppercase
+            const amtText = msToMinutesAndSeconds(song.duration_ms); // Get the duration
+
+            let charIndex = 0;
+
+            function typeCharacter() {
+                if (charIndex < itemText.length) {
+                    itemSpan.textContent += itemText.charAt(charIndex); // Use textContent
+                    charIndex++;
+                    setTimeout(typeCharacter, 15); // Adjust typing speed here (reduced delay)
+                } else {
+                    amtSpan.textContent = amtText; // Set amt after item is typed
+                }
+            }
+
+            totalTime += song.duration_ms;
+            setTimeout(typeCharacter, i * 75); // Reduced stagger delay
+        });
+
+        document.getElementById('item-count').innerHTML = track.length > 0 ? track.length : "";
+        document.getElementById('total-amount').innerHTML = msToMinutesAndSeconds(totalTime) ? msToMinutesAndSeconds(totalTime) : "";
+    }
+
+    // 5. Function: Update Receipt Data
+    async function updateReceipt() {
+        const metricType = document.getElementById("type-select-dropdown").value;
+        let timePeriod = null;
+        const getActive = document.querySelector('#time-period .active');
+        if (getActive) {
+            timePeriod = getActive.getAttribute('data-time-range');
+            updateTimePeriodDisplay(timePeriod);
+        }
+
+        let length = 10;
+        const getActiveLength = document.querySelector('#length .active');
+        if (getActiveLength) {
+            length = getActiveLength.getAttribute('data-length');
+        }
+
+        // Determine order number
+        let orderNumber = "0001";
+        if (timePeriod === "medium_term") {
+            orderNumber = "0002";
+        } else if (timePeriod === "long_term") {
+            orderNumber = "0003";
+        }
+
+        // Update order details
+        document.getElementById('order-details').innerHTML = `ORDER #${orderNumber} FOR DOTSRLD`;
+
+        try {
+            let spotifyData = null;
+            let displayFunction = null; // Function to display the data
+
+            if (metricType === "tracks") {
+                spotifyData = await fetchTopTracks(timePeriod, length);
+                displayFunction = displayReceipt;
+            } else if (metricType === "artists") {
+                spotifyData = await fetchTopArtists(timePeriod, length);
+                displayFunction = displayArtistsReceipt;
+            } else if (metricType === "genres") {
+                spotifyData = await fetchTopGenres(timePeriod, length);
+                displayFunction = displayGenresReceipt;
+            } else {
+                console.warn("Invalid metric type selected.");
+                document.getElementById('track-list').innerHTML = "<p>Invalid metric type selected.</p>";
+                document.getElementById('item-count').innerHTML = "";
+                document.getElementById('total-amount').innerHTML = "";
+                return;
+            }
+
+            if (spotifyData === null) {
+                // An error occurred during data fetching
+                document.getElementById('track-list').innerHTML = "<p>Failed to load data from Spotify. Please try again later.</p>";
+                document.getElementById('item-count').innerHTML = "";
+                document.getElementById('total-amount').innerHTML = "";
+                return;
+            }
+
+            // Display the receipt based on the selected metric type
+            if (displayFunction) {
+                displayFunction(spotifyData, metricType);
+            }
+
+               // Update content based on actual values or blanks them
+            const itemCountValue = spotifyData && spotifyData.items ? spotifyData.items.length : 0;
+            document.getElementById('item-count').innerHTML = itemCountValue > 0 ? itemCountValue : "";
+
+        } catch (error) {
+            console.error("Error updating receipt:", error);
+            document.getElementById('track-list').innerHTML = "<p>An unexpected error occurred. Please try again later.</p>";
+             document.getElementById('item-count').innerHTML = "";
+             document.getElementById('total-amount').innerHTML = "";
+        }
+
+        // Clear personality analysis when switching to tracks or artists
+        if (metricType === "tracks" || metricType === "artists") {
+            const analysisDiv = document.getElementById('personality-analysis');
+            analysisDiv.innerHTML = ""; // Clear the content
+        }
+    }
+
+    async function calculateStats(timePeriod = "short_term", limit = 50) {
+        const topTracksData = await fetchTopTracks(timePeriod, limit);
+        const topArtistsData = await fetchTopArtists(timePeriod, limit);
+
+        if (!topTracksData || !topTracksData.items || !topArtistsData || !topArtistsData.items) {
+            console.error("Could not fetch top tracks or artists data.");
+            return null;
+        }
+
+        let totalPlaytimeMs = 0;
+        let mostPlayedTrack = { name: "N/A", artist: "N/A", playCount: 0 };
+        const trackPlayCounts = {};
+
+        topTracksData.items.forEach(track => {
+            totalPlaytimeMs += track.duration_ms;
+            const trackId = track.id;
+            trackPlayCounts[trackId] = (trackPlayCounts[trackId] || 0) + 1;
+
+            if (trackPlayCounts[trackId] > mostPlayedTrack.playCount) {
+                mostPlayedTrack = {
+                    name: track.name,
+                    artist: track.artists[0].name,
+                    playCount: trackPlayCounts[trackId]
+                };
+            }
+        });
+
+        const uniqueArtists = new Set(topTracksData.items.map(track => track.artists[0].name)).size;
+
+        const topGenre = "N/A"; // Needs more complex logic
+
+        let topArtist = { name: "N/A", playtime: "0", trackCount: 0 };
+        if (topArtistsData.items.length > 0) {
+            topArtist = {
+                name: topArtistsData.items[0].name,
+                playtime: "N/A", // Needs more complex logic
+                trackCount: topArtistsData.items.length
+            };
+        }
+
+        const totalPlaytime = msToMinutesAndSeconds(totalPlaytimeMs);
+
+        return {
+            totalPlaytime,
+            uniqueArtists,
+            topGenre,
+            topArtist,
+            mostPlayedTrack
+        };
+    }
+
+    // 7. Initialization and Access Token Check
+    document.addEventListener("DOMContentLoaded", () => {
+        // Load Current Date// 1) new
+        function updateDateTime() {
+            let receiptDate = new Date();
+
+            let month = String(receiptDate.getMonth() + 1).padStart(2, '0');
+            let day = String(receiptDate.getDate()).padStart(2, '0');
+            let year = receiptDate.getFullYear();
+            let hours = receiptDate.getHours();
+            let minutes = String(receiptDate.getMinutes()).padStart(2, '0');
+            let ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12; // the hour '0' should be '12'
+
+            let formattedDate = `${month}/${day}/${year} - ${hours}:${minutes} ${ampm}`;
+            document.getElementById('receipt-date').innerHTML = formattedDate;
+        }
+        updateDateTime()
+        //Update current Time every minute
+        setInterval(updateDateTime, 60000)
+
+        // Select the item header element
+        const itemHeader = document.querySelector('.item-header');
+        
+        if (itemHeader) {
+            itemHeader.style.display = 'flex';
+            itemHeader.style.alignItems = 'center';
+
+            const itemHeaderStyles = window.getComputedStyle(itemHeader);
+            const data = {
+                itemHeaderDisplay: itemHeaderStyles['display'],
+                itemHeaderAlignItems: itemHeaderStyles['align-items']
+            };
+            console.log(data);
+        }
+
+        //Load Image
+        paperImage.src = 'src/white.jpg';
+        // Hide elements initially
+        document.getElementById('loggedin').style.display = 'none';
+
+        const accessToken = localStorage.getItem('spotify_access_token');
+        if (!accessToken) {
+            document.getElementById('login').style.display = 'block';
+        } else {
+            document.getElementById('login').style.display = 'none';
+            document.getElementById('loggedin').style.display = 'block';
+            updateReceipt(); // Load Receipt on first load
+        }
+
+    });
+
+    </script>
+</body>
+</html>

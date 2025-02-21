@@ -1,0 +1,36 @@
+.stamp-border {
+  /* Change this value to adjust the stamp perforation size: */
+  --radius: 8px;
+
+  background-image: 
+    radial-gradient(
+      var(--radius),
+      transparent 98%,
+      white
+    ),
+    linear-gradient(white 0 0);
+  background-repeat: 
+    round, 
+    no-repeat;
+  background-position:
+    calc(var(--radius) * -1.5) calc(var(--radius) * -1.5),
+    50%;
+  background-size:
+    calc(var(--radius) * 3) calc(var(--radius) * 3),
+    calc(100% - var(--radius) * 3) calc(100% - var(--radius) * 3);
+}
+
+
+/*  Cosmetic styles */
+
+body {
+  background: slateblue;
+}
+
+.stamp-border {
+  width: min(50%, 600px);
+  height: 50%;
+  position: fixed;
+  inset: 0;
+  margin: auto;
+}

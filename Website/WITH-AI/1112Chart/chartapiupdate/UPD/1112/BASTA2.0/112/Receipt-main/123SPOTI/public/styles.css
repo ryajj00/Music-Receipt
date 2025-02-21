@@ -1,0 +1,720 @@
+body {
+    font-family: Helvetica, sans-serif;
+    background: slateblue;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding-top: 50px;
+    color: #333;
+/*
+    background-image: url('src/pee.jpg');*/
+}
+
+/*--- Other styles --- */
+
+nav {
+    background-color: transparent;     /* Make navigation transparent */
+    padding: 10px 20px;         /* Add padding */
+    border-bottom: none;          /* Remove the border */
+
+    position: absolute; /* Fix position at top */
+    top: 0;
+    right: 0; /* Changed from left: 0; */
+    width: auto; /* Changed from width: 100%; */
+    display: flex;
+    justify-content: flex-end; /* Align items to the right */
+    align-items: center; /* Center content vertically */
+    box-sizing: border-box;          /* Include padding in width calculation */
+    z-index: 10;          /* Ensure navigation is above other content */
+}
+
+footer {
+    background-color: transparent; /* Transparent Background */
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+/* --- Navigation Links Group --- */
+.nav-links {
+    display: flex; /* Arrange links horizontally */
+}
+
+.nav-links a {
+    color: #fffefe;
+    text-decoration: none;
+    padding: 5px 10px;
+    margin: 0 5px;
+}
+
+.nav-links a:hover {
+    text-decoration: underline;
+}
+
+.logout-button {
+    background-color: #1DB954;         /* Spotify Green */
+    color: white;
+    border: none;
+    padding: 6px 15px;
+    /* margin-left: 20px; Push to the right */
+    cursor: pointer;
+    border-radius: 5px; /* Rounded corners */
+}
+
+/* --- Main Content Area --- */
+/* --- Main Content Area --- */
+/* --- Main Content Area --- */
+.container {
+    display: flex;
+    max-width: 900px;
+    margin: 10px auto;
+    padding: 10px;
+    background-color: transparent; /* Removed opacity for the gradient */
+               /* Subtle shadow */
+}
+.receipt-section h2{
+    color: rgb(255, 255, 255); /*set header to black */
+}
+#receiptText {
+    font-family: monospace;
+    white-space: pre-wrap;
+    font-size: 14px;
+    line-height: 1.4;
+    color:rgb(255, 255, 255); /*change color of the text */
+}
+
+#receiptImage {
+    max-width: 100%; /* Make the image responsive */
+    height: auto; /* Maintain aspect ratio */
+    display: block; /* Remove extra space below the image */
+    margin: 10px auto; /* Center horizontally with margin on top and bottom*/
+
+}
+
+.customize-section h2 {
+    margin-top: 0;
+    color:rgb(255, 255, 255); /*change color of the text */
+}
+.form-group label{
+    color:rgb(255, 255, 255); /*change color of the text */
+}
+.receipt-explained{
+    color:rgb(255, 255, 255); /*change color of the text */
+}
+
+.download-buttons {
+    margin-top: 20px;
+}
+
+.download-buttons button {
+    background-color: #000000; /* Spotify Green */
+    color: white;
+    border: 1px solid black;
+    padding: 8px 12px;
+    margin-bottom: 5px;
+    cursor: pointer;
+    width: 100%;
+    border-radius: 5px;
+}
+
+.download-buttons button:hover {
+    background-color: rgba(0, 0, 0, 0.2); /* Darken on hover */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Add transition */
+}
+
+/* --- Customize Section --- */
+.customize-section {
+    width: 70%;
+    padding: 10px;
+    margin: 5%;
+}
+
+.customize-section h2 {
+    margin-top: 0;
+}
+
+.form-group {
+    margin-bottom: 10px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+select, .button-group {
+    width: 100%;
+    padding: 8px;
+    border-radius: 5px;
+    box-sizing: border-box;        /* Prevents padding from affecting width */
+}
+
+.button-group {
+    display: flex;
+    justify-content: space-around;
+    /* Remove all button-like styles from the container */
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    width: auto;
+    height: auto;
+    box-shadow: none;
+    transform: none;
+}
+
+.button-group::after,
+.button-group::before {
+    display: none; /* Hide pseudo-elements */
+}
+
+/* Adjustments for the Length button group */
+#length {
+    display: flex; /* Use flexbox for layout */
+}
+
+#length > button:nth-child(1) {
+    flex: 0 0 30%; /* Top 10 button takes 20% */
+}
+
+#length > button:nth-child(2) {
+    flex: 0 0 70%; /* Top 50 button takes 80% */
+}
+
+/* Adjustments for the Time Period button group */
+#time-period {
+    display: flex; /* Use flexbox for layout */
+}
+
+#time-period > button:nth-child(1) {
+    flex: 0 0 20%; /* This Month button takes 20% */
+}
+
+#time-period > button:nth-child(2) {
+    flex: 0 0 30%; /* Last 6 Months button takes 30% */
+}
+
+#time-period > button:nth-child(3) {
+    flex: 0 0 50%; /* Last Year button takes 50% */
+}
+
+/* Adjustments for the Mode button group */
+#mode {
+    display: flex; /* Use flexbox for layout */
+}
+
+#mode > button:nth-child(1) {
+    flex: 0 0 40%; /* Normal button takes 60% */
+}
+
+#mode > button:nth-child(2) {
+    flex: 0 0 60%; /* Brat Edition button takes 40% */
+}
+
+.button-group button:hover {
+    background-color: rgba(0, 0, 0, 0.2); /* Darken on hover */
+    color:white; /* Ensure text remains white on hover */
+}
+
+.button-group button.active {
+    background-color: black;
+    color: white;
+    border: none;
+}
+
+.barcode-container {
+    text-align: center; /* Center the image horizontally */
+    margin-top: 50px; /* Add some spacing above the image */
+    margin-bottom: 10px; /* Add some spacing below the image */
+}
+
+.barcode-container img {
+    max-width: 100%; /* Make the image responsive */
+    height: auto; /* Maintain aspect ratio */
+}
+
+/* Style for receipt generation using dom-to-image */
+.receiptContainer {
+    width: 360px;
+    padding: 15px;
+    font-family: monospace;
+    font-size: 16px;
+    color: black;
+    line-height: 1.2;
+    background-image: url('src/paper_texture.png');
+    background-repeat: repeat;
+    background-size: 100%;
+    box-sizing: border-box;
+    word-break: break-word;
+    text-align: left;
+    box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+    position: relative; /* Add position relative */
+}
+
+.receiptContainer h2 {
+    font-size: 25px;
+    margin-bottom: 8px;
+    color: black;
+    text-align: center;
+    text-transform: uppercase;
+}
+.receipt-details {
+    display: flex;
+    justify-content: space-between; /* Distribute space evenly */
+    align-items: center; /* Vertically align items */
+    margin-bottom: 10px;
+}
+
+.receipt-details p {
+    margin: 0; /* Remove default paragraph margins */
+}
+
+#time-period-display {
+    text-align: center; /* Align to the left */
+}
+
+#receipt-date {
+    text-align: right; /* Align to the right */
+}
+
+.receipt-details {
+    margin-bottom: 8px;
+    text-align: right; /* Align the whole recipt to the right */
+    display:flex; /* Added to the items*/
+    justify-content: space-between; /* Added to the Items*/
+    flex-direction:column
+}
+
+.receipt-items {
+    margin-bottom: 10px;
+}
+
+/* Improved Item Header */
+.item-header {
+    display: grid;
+    grid-template-columns: 30px 1fr 50px; /* Define three columns: QTY, ITEM, AMT */
+    text-align: left;
+    margin-bottom: 5px;
+    word-break: break-word; /* Prevent text from breaking into two lines */
+}
+
+.item-header span {
+    font-weight: bold;
+    text-align: left;
+    word-break: break-word; /* Prevent text from breaking into two lines */
+    font-size: 15px; /* ADD */
+}
+
+/* Target the ul#track-list directly */
+ul#track-list {
+    margin-bottom: 0; /* Remove bottom margin */
+    padding-left: 0; /* Reset default padding */
+    list-style: none; /* Remove bullet points */
+}
+
+.item-list {
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 0; /* Remove padding */
+}
+
+.item-list li {
+    display: grid;
+    grid-template-columns: 30px 1fr 50px; /*Same that item-header*/
+    text-align: left;
+    word-break: break-word;
+    align-items: baseline; /* Align items to the baseline */
+    margin-top: 0; /* Remove top margin */
+    margin-bottom: 0; /* Remove bottom margin */
+
+}
+/* Ensure QTY takes the column size*/
+ .qty {
+    text-align: right;
+    padding-right: 5px; /* Add some spacing to the right of the quantity */
+    box-sizing: border-box; /* Include padding in the width calculation */
+}
+
+/*Ensure that items are not cut*/
+.item {
+    flex: 1;
+    text-align: left;
+    padding-left: 5px;
+    word-break: break-word;
+}
+/*Stye and set the style*/
+.amt {
+ text-align: right;
+    word-break: break-word;
+}
+
+.header-separator {
+    border-bottom: 3px dashed #000;
+    margin: 5px 0;
+}
+
+.receiptSection p {
+        color: black
+}
+/*Fixed: To account in the line (check if the color fits) */
+.receiptSection li {
+        color: black
+}
+
+ #total-amount{
+        text-align: right
+}
+
+#item-count{
+        text-align: right
+}
+
+/* Added styles for better artist and genre formatting */
+.totalAmount {
+    display: flex;
+    justify-content: space-between; /* Align content to the right */
+    align-items: center; /* Vertically center items */
+    padding-right: 0px; /* Add some padding to the right */
+}
+
+.totalAmount span:first-child {
+    margin-right: auto; /* Push the first span to the left */
+    margin-left: 10px;
+    color: black;
+    text-transform: uppercase; /* Make the text uppercase */
+}
+
+.totalAmount span:last-child {
+    text-align: right; /* Align text to the right */
+    color: black;
+}
+
+.tab {
+  width: 116.67%; /* Extend beyond the receiptContainer (350/300 = 1.1667) */
+  margin: 0 auto; /* Center horizontally with no top margin */
+  height: 12px; /* Adjust height as needed */
+  background-color: #2B2929;
+  border-radius: 6px; /* Add border-radius for smooth edges */
+  position: absolute; /* Position it absolutely */
+  top: 0; /* Align to the top of the receiptContainer */
+  left: -8.335%; /* Adjust to shift the tab to the left ((350-300)/(2*300) = 0.08335) */
+  transform: translateY(-80%); /* Move it completely outside the top */
+}
+
+/* Make receipt responsive on smaller screens */
+@media (max-width: 600px) {
+    .container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .customize-section {
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    .receiptContainer {
+        width: 100%;
+    }
+}
+
+/* From Uiverse.io by ZAKARIAE48CHELLE */ 
+.button-group {
+  display: flex;
+  justify-content: space-around;
+  /* Remove all button-like styles from the container */
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  width: auto;
+  height: auto;
+  box-shadow: none;
+  transform: none;
+}
+
+.button-group::after,
+.button-group::before {
+  display: none; /* Hide pseudo-elements */
+}
+
+.button-group:hover {
+  color: white; /* Ensure text remains white on hover */
+}
+
+/* From Uiverse.io by ZAKARIAE48CHELLE */
+.delete-button {
+  background-color: #000;
+  color: #fff;
+  font-size: 17px;
+  border: 0.5px solid rgba(0, 0, 0, 0.1);
+  padding-bottom: 8px;
+  width: 60px;
+  height: 65px;
+  border-radius: 15px 15px 12px 12px;
+  cursor: pointer;
+  position: relative;
+  will-change: transform;
+  transition: all 0.1s ease-in-out 0s;
+  user-select: none;
+  /* Add gradient shading to each side */
+  background-image: linear-gradient(
+      to right,
+      rgba(0, 0, 0, 0.8),
+      rgba(0, 0, 0, 0)
+    ),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
+  background-position: bottom right, bottom right;
+  background-size: 100% 100%, 100% 100%;
+  background-repeat: no-repeat;
+  box-shadow: inset -4px -10px 0px rgba(255, 255, 255, 0.4),
+    inset -4px -8px 0px rgba(0, 0, 0, 0.3), 0px 2px 1px rgba(0, 0, 0, 0.3),
+    0px 2px 1px rgba(255, 255, 255, 0.1);
+  transform: perspective(70px) rotateX(5deg) rotateY(0deg);
+  margin: 0 5px; /* Add spacing to the left and right of the buttons */
+}
+
+.delete-button::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-image: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.2),
+    rgba(0, 0, 0, 0.5)
+  );
+  z-index: -1;
+  border-radius: 15px;
+  box-shadow: inset 4px 0px 0px rgba(255, 255, 255, 0.1),
+    inset 4px -8px 0px rgba(0, 0, 0, 0.3);
+  transition: all 0.1s ease-in-out 0s;
+}
+
+.delete-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-image: linear-gradient(
+      to right,
+      rgba(0, 0, 0, 0.8),
+      rgba(0, 0, 0, 0)
+    ),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
+  background-position: bottom right, bottom right;
+  background-size: 100% 100%, 100% 100%;
+  background-repeat: no-repeat;
+  z-index: -1;
+  border-radius: 15px;
+  transition: all 0.1s ease-in-out 0s;
+}
+
+.delete-button:active {
+  will-change: transform;
+  transform: perspective(80px) rotateX(5deg) rotateY(1deg) translateY(3px)
+    scale(0.96);
+  height: 64px;
+  border: 0.25px solid rgba(0, 0, 0, 0.2);
+  box-shadow: inset -4px -8px 0px rgba(255, 255, 255, 0.2),
+    inset -4px -6px 0px rgba(0, 0, 0, 0.8), 0px 1px 0px rgba(0, 0, 0, 0.9),
+    0px 1px 0px rgba(255, 255, 255, 0.2);
+  transition: all 0.1s ease-in-out 0s;
+}
+
+.delete-button::after:active {
+  background-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.5),
+    rgba(255, 255, 255, 0.2)
+  );
+}
+
+.delete-button:active::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 5%;
+  left: 20%;
+  width: 50%;
+  height: 80%;
+  background-color: rgba(255, 255, 255, 0.1);
+  animation: overlay 0.1s ease-in-out 0s;
+  pointer-events: none;
+}
+
+@keyframes overlay {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.delete-button:focus {
+  outline: none;
+}
+
+.delete-button:hover {
+  color: white; /* Ensure text remains white on hover */
+}
+
+.login-container {
+    background-color: white;
+    padding: 1px;
+    border-radius: 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+h5 {
+    position: relative;
+    top: -45px; /* Adjust the value as needed */
+  }
+
+.login-button {
+    background-color: #1DB954;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.stamp-border {
+    /* Change this value to adjust the stamp perforation size: */
+    --radius: 8px;
+    background-image:
+        radial-gradient(
+            var(--radius),
+            transparent 98%,
+            white
+        ),
+        linear-gradient(white 0 0);
+    background-repeat:
+        round,
+        no-repeat;
+    background-position:
+        calc(var(--radius) * -1.5) calc(var(--radius) * -1.5),
+        50%;
+    background-size:
+        calc(var(--radius) * 3) calc(var(--radius) * 3),
+        calc(100% - var(--radius) * 3) calc(100% - var(--radius) * 3);
+    width: min(50%, 600px);
+    height: 50%;
+    position: fixed;
+    inset: 0;
+    margin: auto;
+    z-index: -1;
+}
+
+/* From Uiverse.io by Yaya12085 */
+.button {
+    display: flex;
+    background-color: #00DA5A;
+    color: #ffffff;
+    padding: 0.5rem 1.4rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 700;
+    text-align: center;
+    vertical-align: middle;
+    align-items: center;
+    border-radius: 0.5rem;
+    gap: 0.75rem;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transition: .6s ease;
+    margin: 0 auto; /* Add this line to center the button horizontally */
+}
+
+.button svg {
+    height: 30px;
+}
+
+.button:hover {
+    box-shadow: none;
+}
+
+/* From Uiverse.io by darrylnoakes */
+.loader {
+    --icon-count: 3;
+    --inner-height: 4em;
+    --ratio: 2/3;
+    /* Customizable */
+    --period: 1s;
+    /* Customizable */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--inner-height);
+    width: calc(var(--inner-height) * var(--ratio) * var(--icon-count));
+	color: white;
+}
+
+.loader .icon {
+    width: calc(100% / var(--icon-count));
+    height: calc(100% * var(--ratio));
+    animation: loader-bounce02 var(--period) infinite linear;
+}
+
+/*
+ * animation delay = (n - 1) / steps * period
+ */
+
+.loader .icon:nth-of-type(2) {
+    animation-delay: calc(1 / 5 * var(--period));
+}
+
+.loader .icon:nth-of-type(3) {
+    animation-delay: calc(2 / 5 * var(--period));
+}
+
+@keyframes loader-bounce02 {
+    20% {
+        /* Raise */
+        transform: translateY(calc(-50% * (1 - var(--ratio))));
+    }
+
+    40% {
+        /* Lower */
+        transform: translateY(calc(50% * (1 - var(--ratio))));
+    }
+
+    60% {
+        /* Keep centered */
+        transform: translateY(0);
+    }
+
+    80% {
+        /* Keep centered */
+        transform: translateY(0);
+    }
+}
+
+.loader-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: slateblue; /* Match body background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure it's on top */
+}
