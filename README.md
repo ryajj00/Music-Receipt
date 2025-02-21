@@ -1,6 +1,6 @@
 # Music-Receipt
 
-Music Receipt Website
+Music Receipt Website (For Project Purposes only.)
 
 🎵 Overview
 
