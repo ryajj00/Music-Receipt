@@ -205,6 +205,7 @@ select, .button-group {
 /* Adjustments for the Mode button group */
 #mode {
     display: flex; /* Use flexbox for layout */
+    justify-content: flex-start;
 }
 
 #mode > button:nth-child(1) {
@@ -475,8 +476,9 @@ ul#track-list {
   box-shadow: inset -4px -10px 0px rgba(255, 255, 255, 0.4),
     inset -4px -8px 0px rgba(0, 0, 0, 0.3), 0px 2px 1px rgba(0, 0, 0, 0.3),
     0px 2px 1px rgba(255, 255, 255, 0.1);
-  transform: perspective(70px) rotateX(5deg) rotateY(0deg);
-  margin: 0 5px; /* Add spacing to the left and right of the buttons */
+  transform: perspective(80px) rotateX(5deg) rotateY(0deg);
+  margin: 0 6px; /* Add spacing to the left and right of the buttons */
+  
 }
 
 .delete-button::after {
